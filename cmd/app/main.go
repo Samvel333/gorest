@@ -1,22 +1,15 @@
 package main
 
 import (
-	// "fmt"
 	"log"
 	"net/http"
-	"os"
-
-	"github.com/joho/godotenv"
+	"github.com/samvel333/gorest/config"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error to load .env file")
-	}
+	config := config.LoadConfig()
 
-	port := os.Getenv("PORT")
 	mux := http.NewServeMux()
-	log.Println("Server started at port", port)
-	log.Fatal(http.ListenAndServe(":"+port, mux))
+	log.Println("Server started at port", config.Port)
+	log.Fatal(http.ListenAndServe(":"+config.Port, mux))
 }
