@@ -17,6 +17,6 @@ func main() {
 
 	port := os.Getenv("PORT")
 	mux := http.NewServeMux()
-	log.Println("Сервер запущен на порту", port)
+	log.Println("Server started at port", port)
 	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
