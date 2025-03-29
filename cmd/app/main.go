@@ -1,14 +1,22 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error to load .env file")
+	}
+
+	port := os.Getenv("PORT")
 	mux := http.NewServeMux()
-	var port int = 5000
 	log.Println("Сервер запущен на порту", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), mux))
+	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
