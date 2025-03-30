@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	_ "github.com/samvel333/gorest/cmd/app/docs" // Adjust this based on your module path
+	_ "github.com/samvel333/gorest/cmd/app/docs"
 	"github.com/samvel333/gorest/config"
 	"github.com/samvel333/gorest/internal/handlers"
 	"github.com/samvel333/gorest/internal/repository"
