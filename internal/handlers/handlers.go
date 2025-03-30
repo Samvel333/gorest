@@ -96,3 +96,24 @@ func (h *Handler) DeletePersonHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"message": "Person deleted!"})
 }
+
+func (h *Handler) UpdatePersonHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPut {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var person models.Person
+	if err := json.NewDecoder(r.Body).Decode(&person); err != nil {
+		http.Error(w, "Error JSON parsing", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.Repo.UpdatePerson(person); err != nil {
+		http.Error(w, "error to update", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"message": "updated!"})
+}

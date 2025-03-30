@@ -41,6 +41,7 @@ func main() {
 	mux.HandleFunc("POST /people", handler.CreatePersonHandler)
 	mux.HandleFunc("GET /people", handler.GetPeopleHandler)
 	mux.HandleFunc("DELETE /people/delete", handler.DeletePersonHandler)
+	mux.HandleFunc("PUT /people/update", handler.UpdatePersonHandler)
 
 	log.Println("Server started at port", config.Port)
 	log.Fatal(http.ListenAndServe(":"+config.Port, mux))

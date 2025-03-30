@@ -79,3 +79,10 @@ func (r *Repository) DeletePerson(id string) error {
 	_, err := r.DB.Exec(query, id)
 	return err
 }
+
+// update method
+func (r *Repository) UpdatePerson(person models.Person) error {
+	query := `UPDATE people SET name=$1, surname=$2, patronymic=$3, age=$4, gender=$5, nationality=$6 WHERE id=$7`
+	_, err := r.DB.Exec(query, person.Name, person.Surname, person.Patronymic, person.Age, person.Gender, person.Nationality, person.ID)
+	return err
+}
