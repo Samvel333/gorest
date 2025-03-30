@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/samvel333/gorest/internal/models"
 	"github.com/samvel333/gorest/internal/repository"
@@ -55,4 +56,26 @@ func (h *Handler) CreatePersonHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(person)
+}
+
+func (h *Handler) GetPeopleHandler(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query()
+	name := query.Get("name")
+	surname := query.Get("surname")
+	age, _ := strconv.Atoi(query.Get("age"))
+	limit, _ := strconv.Atoi(query.Get("limit"))
+	offset, _ := strconv.Atoi(query.Get("offset"))
+
+	if limit == 0 {
+		limit = 10 // значение по умолчанию
+	}
+
+	people, err := h.Repo.GetPeople(name, surname, age, limit, offset)
+	if err != nil {
+		http.Error(w, "Ошибка получения данных", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(people)
 }
