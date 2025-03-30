@@ -25,7 +25,7 @@ func NewHandler(repo *repository.Repository) *Handler {
 // @Accept json
 // @Produce json
 // @Param person body models.CreatePerson true "Person object to create"
-// @Success 201 {object} models.CreatePerson "Created person with enriched data"
+// @Success 201 {object} models.Person "Created person with enriched data"
 // @Failure 400 {string} string "JSON parsing error"
 // @Failure 500 {string} string "Error storing in db"
 // @Router /person [post]
@@ -54,13 +54,18 @@ func (h *Handler) CreatePersonHandler(w http.ResponseWriter, r *http.Request) {
 	person.Nationality = nationality
 
 	// Save in DB
-	if err := h.Repo.CreatePerson(person); err != nil {
+	// if err := h.Repo.CreatePerson(person); err != nil {
+	// 	http.Error(w, "Error storing in db", http.StatusInternalServerError)
+	// 	return
+	// }
+	res, err := h.Repo.CreatePerson(person)
+	if err != nil {
 		http.Error(w, "Error storing in db", http.StatusInternalServerError)
 		return
 	}
-
+	
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(person)
+	json.NewEncoder(w).Encode(res)
 }
 
 // @Summary Get persons list

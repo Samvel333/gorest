@@ -18,15 +18,21 @@ func NewRepository(db *sql.DB) *Repository {
 }
 
 // Create Person function
-func (r *Repository) CreatePerson(person models.Person) error {
+func (r *Repository) CreatePerson(person models.Person) (*models.Person, error) {
+	
 	query := `INSERT INTO people (name, surname, patronymic, age, gender, nationality)
-	          VALUES ($1, $2, $3, $4, $5, $6)`
+	          VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, name, surname, patronymic, age, gender, nationality`
 
-	_, err := r.DB.Exec(query, person.Name, person.Surname, person.Patronymic, person.Age, person.Gender, person.Nationality)
+	var createdPerson models.Person
+	err := r.DB.QueryRow(query, person.Name, person.Surname, person.Patronymic, person.Age, person.Gender, person.Nationality).
+		Scan(&createdPerson.ID, &createdPerson.Name, &createdPerson.Surname, &createdPerson.Patronymic, &createdPerson.Age, &createdPerson.Gender, &createdPerson.Nationality)
+
 	if err != nil {
 		log.Println("Error", err)
+		return nil, err
 	}
-	return err
+
+	return &createdPerson, nil
 }
 
 // Get all persos with pagination
