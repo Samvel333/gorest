@@ -1,8 +1,6 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -10,24 +8,9 @@ import (
 	"github.com/samvel333/gorest/config"
 	"github.com/samvel333/gorest/internal/handlers"
 	"github.com/samvel333/gorest/internal/repository"
+	"github.com/samvel333/gorest/internal/services"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
-
-func mustConnectDB(config *config.Config) *sql.DB {
-	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		config.DbHost, config.DbPort, config.DbUser, config.DbPass, config.DbName)
-
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal("Error when connecting to DB:", err)
-	}
-
-	if err = db.Ping(); err != nil {
-		log.Fatal("Cannot reach the database:", err)
-	}
-
-	return db
-}
 
 // @title People API
 // @version 1.0
@@ -36,7 +19,7 @@ func mustConnectDB(config *config.Config) *sql.DB {
 func main() {
 	config := config.LoadConfig()
 	// DB Connecting
-	db := mustConnectDB(config)
+	db := services.ConnectDB(config)
 
 	repo := repository.NewRepository(db)
 	handler := handlers.NewHandler(repo)
