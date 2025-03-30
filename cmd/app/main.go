@@ -6,9 +6,11 @@ import (
 	"log"
 	"net/http"
 
+	_ "github.com/samvel333/gorest/cmd/app/docs" // Adjust this based on your module path
 	"github.com/samvel333/gorest/config"
 	"github.com/samvel333/gorest/internal/handlers"
 	"github.com/samvel333/gorest/internal/repository"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func mustConnectDB(config *config.Config) *sql.DB {
@@ -27,6 +29,11 @@ func mustConnectDB(config *config.Config) *sql.DB {
 	return db
 }
 
+// @title People API
+// @version 1.0
+// @description API для работы с людьми
+// @host localhost:8080
+// @BasePath /
 func main() {
 	config := config.LoadConfig()
 	// DB Connecting
@@ -35,10 +42,10 @@ func main() {
 	repo := repository.NewRepository(db)
 	handler := handlers.NewHandler(repo)
 
-
 	mux := http.NewServeMux()
-
+	mux.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 	mux.HandleFunc("POST /people", handler.CreatePersonHandler)
+
 	mux.HandleFunc("GET /people", handler.GetPeopleHandler)
 	mux.HandleFunc("DELETE /people/delete", handler.DeletePersonHandler)
 	mux.HandleFunc("PUT /people/update", handler.UpdatePersonHandler)

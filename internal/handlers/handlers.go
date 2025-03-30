@@ -19,6 +19,15 @@ func NewHandler(repo *repository.Repository) *Handler {
 	return &Handler{Repo: repo}
 }
 
+// @Summary Получить список людей
+// @Description Возвращает список людей с возможностью фильтрации и пагинации
+// @Param name query string false "Имя"
+// @Param surname query string false "Фамилия"
+// @Param age query int false "Возраст"
+// @Param limit query int false "Лимит"
+// @Param offset query int false "Смещение"
+// @Success 200 {array} models.Person
+// @Router /people [get]
 func (h *Handler) CreatePersonHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
