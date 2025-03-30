@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-
 	"github.com/samvel333/gorest/internal/models"
 	"github.com/samvel333/gorest/internal/repository"
 	"github.com/samvel333/gorest/pkg/httpclient"
