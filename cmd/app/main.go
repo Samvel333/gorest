@@ -11,22 +11,31 @@ import (
 	"github.com/samvel333/gorest/internal/repository"
 )
 
-func main() {
-	config := config.LoadConfig()
-
-	// DB Connecting
+func mustConnectDB(config *config.Config) *sql.DB {
 	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.DbHost, config.DbPort, config.DbUser, config.DbPass, config.DbName)
 
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		log.Fatal("Error when connecting to DB", err)
+		log.Fatal("Error when connecting to DB:", err)
 	}
+
+	if err = db.Ping(); err != nil {
+		log.Fatal("Cannot reach the database:", err)
+	}
+
+	return db
+}
+
+func main() {
+	config := config.LoadConfig()
+	// DB Connecting
+	db := mustConnectDB(config)
 
 	repo := repository.NewRepository(db)
 	handler := handlers.NewHandler(repo)
 
-
+	
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("POST /people", handler.CreatePersonHandler)
