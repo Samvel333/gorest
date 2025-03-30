@@ -35,11 +35,12 @@ func main() {
 	repo := repository.NewRepository(db)
 	handler := handlers.NewHandler(repo)
 
-	
+
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("POST /people", handler.CreatePersonHandler)
 	mux.HandleFunc("GET /people", handler.GetPeopleHandler)
+	mux.HandleFunc("DELETE /people/delete", handler.DeletePersonHandler)
 
 	log.Println("Server started at port", config.Port)
 	log.Fatal(http.ListenAndServe(":"+config.Port, mux))

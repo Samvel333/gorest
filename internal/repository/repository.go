@@ -46,7 +46,7 @@ func (r *Repository) GetPeople(name, surname string, age int, limit, offset int)
 		args = append(args, "%"+surname+"%")
 		argID++
 	}
-	
+
 	if age > 0 {
 		query += fmt.Sprintf(" AND age = $%d", argID)
 		args = append(args, age)
@@ -71,4 +71,11 @@ func (r *Repository) GetPeople(name, surname string, age int, limit, offset int)
 		people = append(people, person)
 	}
 	return people, nil
+}
+
+// Delete person by id
+func (r *Repository) DeletePerson(id string) error {
+	query := `DELETE FROM people WHERE id = $1`
+	_, err := r.DB.Exec(query, id)
+	return err
 }
