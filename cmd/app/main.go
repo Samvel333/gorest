@@ -31,8 +31,7 @@ func mustConnectDB(config *config.Config) *sql.DB {
 
 // @title People API
 // @version 1.0
-// @description API для работы с людьми
-// @host localhost:8080
+// @description People API (test)
 // @BasePath /
 func main() {
 	config := config.LoadConfig()
@@ -47,6 +46,7 @@ func main() {
 	mux.HandleFunc("POST /people", handler.CreatePersonHandler)
 
 	mux.HandleFunc("GET /people", handler.GetPeopleHandler)
+	mux.HandleFunc("GET /person", handler.GetPersonByIDHandler)
 	mux.HandleFunc("DELETE /people/delete", handler.DeletePersonHandler)
 	mux.HandleFunc("PUT /people/update", handler.UpdatePersonHandler)
 

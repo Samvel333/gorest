@@ -73,6 +73,17 @@ func (r *Repository) GetPeople(name, surname string, age int, limit, offset int)
 	return people, nil
 }
 
+func (r *Repository) GetPersonByID(id string) (models.Person, error) {
+	var person models.Person
+	query := `SELECT id, name, surname, patronymic, age, gender, nationality FROM people WHERE id = $1`
+	err := r.DB.QueryRow(query, id).Scan(&person.ID, &person.Name, &person.Surname, &person.Patronymic, &person.Age, &person.Gender, &person.Nationality)
+
+	if err != nil {
+		return models.Person{}, err
+	}
+	return person, nil
+}
+
 // Delete person by id
 func (r *Repository) DeletePerson(id string) error {
 	query := `DELETE FROM people WHERE id = $1`
