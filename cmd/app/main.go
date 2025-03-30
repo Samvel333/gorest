@@ -12,10 +12,15 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-// @title People API
+
+// @title People API (Task)
 // @version 1.0
-// @description People API (test)
+// @description A simple API for managing people data.
 // @BasePath /
+// @contact.name Samvel Sadoyan
+// @contact.email sadoyansamvel@yandex.com
+// @host localhost:7000
+// @schemes http
 func main() {
 	config := config.LoadConfig()
 	// DB Connecting
@@ -26,12 +31,12 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/swagger/", httpSwagger.WrapHandler)
-	mux.HandleFunc("POST /people", handler.CreatePersonHandler)
 
+	mux.HandleFunc("POST /person", handler.CreatePersonHandler)
 	mux.HandleFunc("GET /people", handler.GetPeopleHandler)
 	mux.HandleFunc("GET /person", handler.GetPersonByIDHandler)
-	mux.HandleFunc("DELETE /people/delete", handler.DeletePersonHandler)
-	mux.HandleFunc("PUT /people/update", handler.UpdatePersonHandler)
+	mux.HandleFunc("DELETE /person", handler.DeletePersonHandler)
+	mux.HandleFunc("PUT /person", handler.UpdatePersonHandler)
 
 	log.Println("Server started at port", config.Port)
 	log.Fatal(http.ListenAndServe(":"+config.Port, mux))

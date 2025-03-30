@@ -9,3 +9,9 @@ type Person struct {
 	Gender      string `json:"gender"`
 	Nationality string `json:"nationality"`
 }
+
+type CreatePerson struct {
+	Name        string `json:"name"`
+	Surname     string `json:"surname"`
+	Patronymic  string `json:"patronymic,omitempty"`
+}

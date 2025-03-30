@@ -19,21 +19,17 @@ func NewHandler(repo *repository.Repository) *Handler {
 	return &Handler{Repo: repo}
 }
 
-// @Summary Получить список людей
-// @Description Возвращает список людей с возможностью фильтрации и пагинации
-// @Param name query string false "Имя"
-// @Param surname query string false "Фамилия"
-// @Param age query int false "Возраст"
-// @Param limit query int false "Лимит"
-// @Param offset query int false "Смещение"
-// @Success 200 {array} models.Person
-// @Router /people [get]
+// @Summary Create a new person
+// @Description Creates a new person by storing the provided JSON payload in the database. The person's age, gender, and nationality are enriched via external APIs.
+// @Tags persons
+// @Accept json
+// @Produce json
+// @Param person body models.CreatePerson true "Person object to create"
+// @Success 201 {object} models.CreatePerson "Created person with enriched data"
+// @Failure 400 {string} string "JSON parsing error"
+// @Failure 500 {string} string "Error storing in db"
+// @Router /person [post]
 func (h *Handler) CreatePersonHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	var person models.Person
 	if err := json.NewDecoder(r.Body).Decode(&person); err != nil {
 		http.Error(w, "JSON parsing error", http.StatusBadRequest)
@@ -67,6 +63,15 @@ func (h *Handler) CreatePersonHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(person)
 }
 
+// @Summary Get persons list
+// @Description Returns persons list with filters and pagination
+// @Param name query string false "NAme"
+// @Param surname query string false "Surname"
+// @Param age query int false "Age"
+// @Param limit query int false "Limit"
+// @Param offset query int false "Offset"
+// @Success 200 {array} models.Person
+// @Router /people [get]
 func (h *Handler) GetPeopleHandler(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	name := query.Get("name")
@@ -76,12 +81,12 @@ func (h *Handler) GetPeopleHandler(w http.ResponseWriter, r *http.Request) {
 	offset, _ := strconv.Atoi(query.Get("offset"))
 
 	if limit == 0 {
-		limit = 10 // значение по умолчанию
+		limit = 10 // default value
 	}
 
 	people, err := h.Repo.GetPeople(name, surname, age, limit, offset)
 	if err != nil {
-		http.Error(w, "Ошибка получения данных", http.StatusInternalServerError)
+		http.Error(w, "Not Found", http.StatusNotFound)
 		return
 	}
 
@@ -89,6 +94,16 @@ func (h *Handler) GetPeopleHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(people)
 }
 
+// @Summary Get a person by ID
+// @Description Retrieves a person from the database using the provided ID.
+// @Tags persons
+// @Accept json
+// @Produce json
+// @Param id query string true "Person ID"
+// @Success 200 {object} models.Person
+// @Failure 404 {string} string "Person not found"
+// @Failure 500 {string} string "Internal server error"
+// @Router /person [get]
 func (h *Handler) GetPersonByIDHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	person, err := h.Repo.GetPersonByID(id)
@@ -101,12 +116,17 @@ func (h *Handler) GetPersonByIDHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(person)
 }
 
+// @Summary Delete a person by ID
+// @Description Deletes a person from the database using the provided ID.
+// @Tags persons
+// @Accept json
+// @Produce json
+// @Param id query string true "Person ID"
+// @Success 200 {object} map[string]string "Person deleted!"
+// @Failure 400 {string} string "Bad request"
+// @Failure 500 {string} string "Error deleting"
+// @Router /person [delete]
 func (h *Handler) DeletePersonHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodDelete {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	id := r.URL.Query().Get("id")
 
 	if err := h.Repo.DeletePerson(id); err != nil {
@@ -118,12 +138,17 @@ func (h *Handler) DeletePersonHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"message": "Person deleted!"})
 }
 
+// @Summary Update a person
+// @Description Updates an existing person in the database using the provided JSON payload.
+// @Tags persons
+// @Accept json
+// @Produce json
+// @Param person body models.Person true "Person object to update"
+// @Success 200 {object} map[string]string "updated!"
+// @Failure 400 {string} string "Error JSON parsing"
+// @Failure 500 {string} string "error to update"
+// @Router /person [put]
 func (h *Handler) UpdatePersonHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPut {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	var person models.Person
 	if err := json.NewDecoder(r.Body).Decode(&person); err != nil {
 		http.Error(w, "Error JSON parsing", http.StatusBadRequest)
