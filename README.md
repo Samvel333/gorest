@@ -33,7 +33,7 @@ Before you start, make sure you have the following installed:
 go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 ~~~
 
-2. Set go path manually for project
+2. Set go path manually in your project
 
 ~~~bash
 export PATH=$PATH:$(go env GOPATH)/bin
@@ -67,6 +67,14 @@ psql -U postgres
 CREATE DATABASE {name}
 
 # note: same db name you should use in your .env file;
+~~~
+
+Don't forget to create .env file. You can use .env-example template
+~~~bash  
+# Linux commands 
+touch .env
+cat .env-example
+# note: Before next step you should have env file
 ~~~
 
 4. Install dependencies  
