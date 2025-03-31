@@ -1,3 +1,5 @@
+// Configuration module
+
 package config
 
 import (
@@ -17,6 +19,7 @@ type Config struct {
 	DbName   string
 }
 
+// This function reads configs from .env file, which is in base path
 func LoadConfig() *Config {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error when Loading env file")

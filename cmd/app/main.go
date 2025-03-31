@@ -23,17 +23,23 @@ import (
 // @schemes http
 func main() {
 	config := config.LoadConfig()
+	/*Setting dynamic BaseURL for swagger
+	I not used any framework, but I found solution)
+	*/
 	baseUrl := fmt.Sprintf("http://%s:%s", config.Host, config.Port)
 	docs.SwaggerInfo.Host = baseUrl
+
 	// DB Connecting
 	db := services.ConnectDB(config)
 
 	repo := repository.NewRepository(db)
 	handler := handlers.NewHandler(repo)
 
+	// Server Instance
 	mux := http.NewServeMux()
-	mux.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 
+	// Routes
+	mux.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 	mux.HandleFunc("POST /person", handler.CreatePersonHandler)
 	mux.HandleFunc("GET /people", handler.GetPeopleHandler)
 	mux.HandleFunc("GET /person", handler.GetPersonByIDHandler)
@@ -43,5 +49,6 @@ func main() {
 	log.Println("Server started at", baseUrl)
 	log.Printf("Swagger page: %s/swagger", baseUrl)
 
+	// Handle error
 	log.Fatal(http.ListenAndServe(":"+config.Port, mux))
 }
