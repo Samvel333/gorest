@@ -19,7 +19,7 @@ import (
 // @description A simple API for managing people data.
 // @BasePath /
 // @contact.name Samvel Sadoyan
-// @contact.email sadoyansamvel@yandex.com
+// @contact.email sadoyansamvel@yandex.ru
 // @schemes http
 func main() {
 	config := config.LoadConfig()
