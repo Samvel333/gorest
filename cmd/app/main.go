@@ -23,7 +23,8 @@ import (
 // @schemes http
 func main() {
 	config := config.LoadConfig()
-	docs.SwaggerInfo.Host = fmt.Sprintf("%s:%s", config.Host, config.Port)
+	baseUrl := fmt.Sprintf("http://%s:%s", config.Host, config.Port)
+	docs.SwaggerInfo.Host = baseUrl
 	// DB Connecting
 	db := services.ConnectDB(config)
 
@@ -39,6 +40,8 @@ func main() {
 	mux.HandleFunc("DELETE /person", handler.DeletePersonHandler)
 	mux.HandleFunc("PUT /person", handler.UpdatePersonHandler)
 
-	log.Println("Server started at port", config.Port)
+	log.Println("Server started at", baseUrl)
+	log.Printf("Swagger page: %s/swagger", baseUrl)
+
 	log.Fatal(http.ListenAndServe(":"+config.Port, mux))
 }
