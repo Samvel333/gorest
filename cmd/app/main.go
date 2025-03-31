@@ -1,10 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
-	_ "github.com/samvel333/gorest/cmd/app/docs"
+	"github.com/samvel333/gorest/cmd/app/docs"
 	"github.com/samvel333/gorest/config"
 	"github.com/samvel333/gorest/internal/handlers"
 	"github.com/samvel333/gorest/internal/repository"
@@ -19,10 +20,10 @@ import (
 // @BasePath /
 // @contact.name Samvel Sadoyan
 // @contact.email sadoyansamvel@yandex.com
-// @host localhost:7000
 // @schemes http
 func main() {
 	config := config.LoadConfig()
+	docs.SwaggerInfo.Host = fmt.Sprintf("%s:%s", config.Host, config.Port)
 	// DB Connecting
 	db := services.ConnectDB(config)
 
