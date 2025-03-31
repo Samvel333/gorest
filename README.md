@@ -30,7 +30,7 @@ Before you start, make sure you have the following installed:
 1. Install migrate package for postgres
 
 ~~~bash
-	go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 ~~~
 
 2. Set go path manually for project
@@ -50,21 +50,21 @@ migrate -v
 1. Clone the project  
 
 ~~~bash  
- git clone https://github.com/Samvel333/gorest
+git clone https://github.com/Samvel333/gorest
 ~~~
 
 2. Go to the project directory  
 
 ~~~bash  
- cd gorest
+cd gorest
 ~~~
 
 3. Set up PostgreSQL
 ~~~bash  
 # Connect to PostgreSQL
- psql -U postgres
+psql -U postgres
 # Create the database
- CREATE DATABASE {name}
+CREATE DATABASE {name}
 
 # note: same db name you should use in your .env file;
 ~~~
@@ -72,24 +72,24 @@ migrate -v
 4. Install dependencies  
 
 ~~~bash  
- make install
+make install
 ~~~
 
 5. Run migrations
 ~~~bash
- make up
+make up
 ~~~
 
 5. Generate swagger docs
 
 ~~~bash  
- make swagger
+make swagger
 ~~~
 
 6. Start the server  
 
 ~~~bash  
- make run
+make run
 ~~~
 
 7. You can use all in one command after 4th step
