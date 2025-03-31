@@ -52,14 +52,19 @@ func (h *Handler) CreatePersonHandler(w http.ResponseWriter, r *http.Request) {
 	person.Gender = gender
 	person.Nationality = nationality
 
-	// Save in DB
-	// if err := h.Repo.CreatePerson(person); err != nil {
-	// 	http.Error(w, "Error storing in db", http.StatusInternalServerError)
-	// 	return
-	// }
+	if person.Name == ""{
+		http.Error(w, "Name field is required", http.StatusBadRequest)
+		return
+	}
+
+	if person.Surname == "" {
+		http.Error(w, "Surname field is required", http.StatusBadRequest)
+		return
+	}
+
 	res, err := h.Repo.CreatePerson(person)
 	if err != nil {
-		http.Error(w, "Error storing in db", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	
